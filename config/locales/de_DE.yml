@@ -264,6 +264,7 @@ de_DE:
       accepted: muss akzeptiert werden
       confirmation: "passt nicht zu %{attribute}"
       inclusion: ist nicht Teil der Liste
+      domain: "muss auf \"%{email_domain}\" enden"
     no_provider:
       message: "Die Seite, auf die Sie zugreifen möchten, ist nicht aktiviert."
       help: "Bitte kontaktieren Sie Ihren Systemadministrator, damit er Greenlight einrichtet."
