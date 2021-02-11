@@ -39,6 +39,7 @@ class User < ApplicationRecord
                    format: { without: %r{https?://}i }
   validates :provider, presence: true
   validate :check_if_email_can_be_blank
+  validate :check_domain
   validates :email, length: { maximum: 256 }, allow_blank: true,
                     uniqueness: { case_sensitive: false, scope: :provider },
                     format: { with: /\A[\w+\-\'.]+@[a-z\d\-.]+\.[a-z]+\z/i }
@@ -234,6 +235,13 @@ class User < ApplicationRecord
     Role.create_default_roles(role_provider) if Role.where(provider: role_provider).count.zero?
   end
 
+  def check_domain
+    if Rails.configuration.require_email_domain.any? && !email.end_with?(*Rails.configuration.require_email_domain)
+      errors.add(:email, I18n.t("errors.messages.domain",
+        email_domain: Rails.configuration.require_email_domain.join('" ' + I18n.t("modal.login.or") + ' "')))
+    end
+  end
+  
   def check_if_email_can_be_blank
     if email.blank?
       if Rails.configuration.loadbalanced_configuration && greenlight_account?
